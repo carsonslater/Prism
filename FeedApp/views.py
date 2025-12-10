@@ -86,8 +86,9 @@ def comments(request, post_id):
 def friendsfeed(request):
     comment_count_list = []
     like_count_list = []
-    friends = Profile.objects.filter(username=friends).values('friends')
-    posts = Post.objects.filter(username__in=friends).order_by('-date_posted')
+    current_user_profile = Profile.objects.get(user=request.user)
+    friends_users = current_user_profile.friends.all()
+    posts = Post.objects.filter(username__in=friends_users).order_by('-date_posted')
     for p in posts:
         c_count = Comment.objects.filter(post=p).count() # this enables us to count how many posts there are
         l_count = Like.objects.filter(post=p).count()
@@ -97,7 +98,7 @@ def friendsfeed(request):
 
     if request.method == 'POST' and request.POST.get("like"):
         post_to_like = request.POST.get("like")
-        like_already_exists = like.objects.filter(post_id=post_to_like, username=request.user)
+        like_already_exists = Like.objects.filter(post_id=post_to_like, username=request.user)
         if not like_already_exists:
             Like.objects.create(post_id=post_to_like, username=request.user)
             return redirect('FeedApp:friendsfeed')
@@ -118,10 +119,10 @@ def friends(request):
 
     # to get Friend requests sent
     user_relationships = Relationship.objects.filter(sender=user_profile)
-    request_sent_profiles = user_relationship.values('receiver')
+    request_sent_profiles = user_relationships.values('receiver')
 
     # to get elligible profiles - exclude the user, their existing friends, and friend requests sent already
-    all_profiles = Profile.objects.exclude(user=request.user).exclude(id_in=user_friends_profiles).exclude(id__in=request_sent_profiles)
+    all_profiles = Profile.objects.exclude(user=request.user).exclude(id__in=user_friends_profiles).exclude(id__in=request_sent_profiles)
 
     # get friend request recieved by the user
     request_recieved_profiles = Relationship.objects.filter(receiver=user_profile, status='sent')
@@ -129,13 +130,13 @@ def friends(request):
     # if this is the first time to access the friend request page, create the first
     # relationship with the admin of the website
     if not user_relationships.exists():
-        Relationship.objects.create(sender=user_profile, reciever=admin_profile, status='sent')
+        Relationship.objects.create(sender=user_profile, receiver=admin_profile, status='sent')
 
     # check to see WHICH submit button was pressed
 
     # process all send requests
     if request.method == 'POST' and request.POST.get("send_requests"):
-        receivers = request.POST.getlist("send_request")
+        receivers = request.POST.getlist("send_requests")
         for receiver in receivers:
             receiver_profile = Profile.objects.get(id=receiver)
             Relationship.objects.create(sender=user_profile, receiver=receiver_profile, status='sent')
@@ -144,7 +145,7 @@ def friends(request):
 
     # process all recieved requests
     if request.method == 'POST' and request.POST.get("recieve_requests"):
-        senders = request.post.getlist("friend_request")
+        senders = request.POST.getlist("friend_request")
         for sender in senders:
             # update relationship for the sender to status 'accepted'
             Relationship.objects.filter(id=sender).update(status='accepted')
