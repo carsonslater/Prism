@@ -1,5 +1,5 @@
 {% extends "FeedApp/base.html" %}
-{% load boopstrap4 %}
+{% load bootstrap4 %}
 
 
 {% block content %}
@@ -7,6 +7,8 @@
 <h1>
     <p>My Posts</p>
 </h1>
+
+<a href="{% url 'FeedApp:new_post' %}">Add a new post</a>
 
 <table style="font-size: 25px; width: 100%;">
     {% for p, c, l in zipped_list %}
