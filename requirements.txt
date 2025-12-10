@@ -4,6 +4,7 @@ dj-database-url
 Django
 django-bootstrap4
 django-crispy-forms
+crispy-bootstrap4
 gunicorn
 # importlib-metadata  # Standard in Python 3.8+
 Pillow
