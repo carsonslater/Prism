@@ -43,8 +43,8 @@ def myfeed(request):
     like_count_list = []
     posts = Post.objects.filter(username=request.user).order_by('-date_posted')
     for p in posts:
-        c_count = Comment.objects.filter(post=p).count # this enables us to count how many posts there are
-        l_count = Like.objects.filter(post=p).count
+        c_count = Comment.objects.filter(post=p).count() # this enables us to count how many posts there are
+        l_count = Like.objects.filter(post=p).count()
         comment_count_list.append(c_count)
         like_count_list.append(l_count)
     zipped_list = zip(posts, comment_count_list, like_count_list)
@@ -69,13 +69,14 @@ def new_post(request):
 
 @login_required
 def comments(request, post_id):
-    if request.method == 'POST' and request.POST.get('btn1'): # making comment button
-        comment = request.post.get("comment") # getting text in the comment box
-        Comment.objects.create(post_id=post_id, username=request.user, text=comment, date_added=date.today())
+    post = Post.objects.get(id=post_id)  # Changed from filter to get
 
-    comments = Comment.objects.filter(post = post_id)
-    post = Post.objects.filter(id = post_id)
+    if request.method == 'POST' and request.POST.get('btn1'):
+        comment = request.POST.get("comment")  # Fixed: uppercase POST
+        Comment.objects.create(post_id=post_id, username=request.user, text=comment, date_added=date.today())
+        return redirect('FeedApp:comments', post_id=post_id)  # Redirect after POST
+
+    comments = Comment.objects.filter(post=post_id)
 
     context = {'post': post, 'comments': comments}
-
     return render(request, 'FeedApp/comments.html', context)
