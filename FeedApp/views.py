@@ -99,7 +99,7 @@ def friendsfeed(request):
     if request.method == 'POST' and request.POST.get("like"):
         post_to_like = request.POST.get("like")
         like_already_exists = Like.objects.filter(post_id=post_to_like, username=request.user)
-        if not like_already_exists:
+        if not like_already_exists.exists():
             Like.objects.create(post_id=post_to_like, username=request.user)
             return redirect('FeedApp:friendsfeed')
 
@@ -145,7 +145,7 @@ def friends(request):
 
     # process all recieved requests
     if request.method == 'POST' and request.POST.get("recieve_requests"):
-        senders = request.POST.getlist("friend_request")
+        senders = request.POST.getlist("recieve_requests")
         for sender in senders:
             # update relationship for the sender to status 'accepted'
             Relationship.objects.filter(id=sender).update(status='accepted')

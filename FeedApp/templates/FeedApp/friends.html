@@ -41,7 +41,7 @@
     {% endfor %}
 </table>
 
-<br><br>
+<br><br><br>
 
 <h2>
     <p>Requests Sent</p>
@@ -66,9 +66,11 @@
     {% endfor %}
 </table>
 
-<h1>
+<br><br><br>
+
+<h2>
     <p>Send a Friend Request</p>
-</h1>
+</h2>
 <form action="{% url 'FeedApp:friends' %}" method="POST">
     {% csrf_token %}
     <table>
@@ -89,10 +91,38 @@
         </tr>
         {% endfor %}
     </table>
-    <br><br>
+    <br>
     <button type="submit" class="btn btn-outline-primary" style="float: left;">Send Request</button>
 </form>
-<br><br>
 
+<br><br><br>
+
+<h2>
+    <p>Friend Requests Recieved</p>
+</h2>
+<form action="{% url 'FeedApp:friends' %}" method="POST">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Users</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Request</th>
+        </tr>
+
+        </tr>
+        {% for rr in request_recieved_profiles %}
+        <tr>
+            <td>{{rr.sender}}</td>
+            <td>{{rr.sender.first_name}}</td>
+            <td>{{rr.sender.last_name}}</td>
+            <td><input type="checkbox" name="recieve_requests" value="{{rr.id}}"></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <button type="submit" class="btn btn-outline-primary" style="float: left;">Approve Request</button>
+    <br><br><br><br>
+</form>
 
 {% endblock content %}
