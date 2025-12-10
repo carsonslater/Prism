@@ -8,7 +8,7 @@
     <p>Posts</p>
 </h1>
 <form method="POST">
-
+    {% csrf_token %}
     <table style="font-size: 25px; width: 100%;">
         {% for p, c, l in zipped_list %}
         <tr style="border: 1px solid black; padding: 6px;">

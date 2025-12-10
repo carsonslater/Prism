@@ -111,7 +111,7 @@ def friendsfeed(request):
 def friends(request):
     # get the admin profile and user profile to create their first relationship
     admin_profile = Profile.objects.get(user=1)
-    user_profile = Profile.objects.get(user=request.user)
+    user_profile, created = Profile.objects.get_or_create(user=request.user)
 
     # to get my friends
     user_friends = user_profile.friends.all()
