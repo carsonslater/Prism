@@ -18,6 +18,12 @@
         <li>
             <p>{{ c.text }} -- {{ c.username }}</p>
         </li>
+        {% empty %}
+        <li>There are no comments for this post.</li>
+        {% endfor %}
+
+        <p><input type="text" name="comment"></p>
+        <p><button type="submit" name="btn1" value=1>Submit Comment</button></p>
     </form>
 </ul>
 
