@@ -18,4 +18,20 @@ def index(request):
     return render(request, "FeedApp/index.html")
 
 
-# @login_required
+@login_required
+def profile(request):
+    profile = Profile.objects.filter(user=request.user)
+    if not profile.exists():
+        Profile.objects.create(user=request.user) # Profile is the model here
+    profile = Profile.objects.get(user=request.user)
+
+    if request.method != 'POST':
+        form = ProfileForm(instance=profile) # we need a specific instance
+    else
+        form = ProfileForm(instance=profile, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('FeedApp:profile')
+
+    context = {'form': form}
+    return render(request, 'FeedApp/profile.html', context)
