@@ -136,3 +136,28 @@ def friends(request):
     # process all send requests
     if request.method == 'POST' and request.POST.get("send_requests"):
         receivers = request.POST.getlist("send_request")
+        for receiver in receivers:
+            receiver_profile = Profile.objects.get(id=receiver)
+            Relationship.objects.create(sender=user_profile, receiver=receiver_profile, status='sent')
+
+        return redirect('FeedApp:friends')
+
+    # process all recieved requests
+    if request.method == 'POST' and request.POST.get("recieve_requests"):
+        senders = request.post.getlist("friend_request")
+        for sender in senders:
+            # update relationship for the sender to status 'accepted'
+            Relationship.objects.filter(id=sender).update(status='accepted')
+
+            # create an object to access the sender's user id to add friends
+            # to list of user
+            relationship_obj = Relationship.objects.get(id=sender)
+            user_profile.friends.add(relationship_obj.sender.user)
+
+            # add the user to the friend's list of the sender profile
+            relationship_obj.sender.friends.add(request.user)
+
+    context = {'user_friends_profiles': user_friends_profiles, 'user_relationships':user_relationships,
+               'all_profiles': all_profiles, 'request_recieved_profiles': request_recieved_profiles}
+
+    return render(request, 'FeedApp/friends.html', context)
