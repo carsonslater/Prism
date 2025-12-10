@@ -108,11 +108,31 @@ def friendsfeed(request):
 
 @login_required
 def friends(request):
+    # get the admin profile and user profile to create their first relationship
     admin_profile = Profile.objects.get(user=1)
     user_profile = Profile.objects.get(user=request.user)
 
+    # to get my friends
     user_friends = user_profile.friends.all()
     user_friends_profiles = Profile.objects.filter(user__in=user_friends)
 
+    # to get Friend requests sent
     user_relationships = Relationship.objects.filter(sender=user_profile)
     request_sent_profiles = user_relationship.values('receiver')
+
+    # to get elligible profiles - exclude the user, their existing friends, and friend requests sent already
+    all_profiles = Profile.objects.exclude(user=request.user).exclude(id_in=user_friends_profiles).exclude(id__in=request_sent_profiles)
+
+    # get friend request recieved by the user
+    request_recieved_profiles = Relationship.objects.filter(receiver=user_profile, status='sent')
+
+    # if this is the first time to access the friend request page, create the first
+    # relationship with the admin of the website
+    if not user_relationships.exists():
+        Relationship.objects.create(sender=user_profile, reciever=admin_profile, status='sent')
+
+    # check to see WHICH submit button was pressed
+
+    # process all send requests
+    if request.method == 'POST' and request.POST.get("send_requests"):
+        receivers = request.POST.getlist("send_request")
