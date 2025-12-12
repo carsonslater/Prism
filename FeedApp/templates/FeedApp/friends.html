@@ -30,12 +30,14 @@
         <th>Email</th>
         <th>Member Since</th>
     </tr>
+    {# Iterate through the list of friends (Profile objects). #}
     {% for friend in user_friends_profiles %}
     <tr>
         <td>{{friend}}</td> <!--username will show up here due to how profile was defined-->
         <td>{{friend.first_name}}</td>
         <td>{{friend.last_name}}</td>
         <td>{{friend.email}}</td>
+        {# Formatting the date using the 'date' filter. #}
         <td>{{friend.created|date:"M d Y"}}</td>
     </tr>
     {% endfor %}
@@ -55,6 +57,7 @@
         <th>Date Sent</th>
         <th>Status</th>
     </tr>
+    {# Iterate through sent friend requests. 'r' is a Relationship object. #}
     {% for r in user_relationships %}
     <tr>
         <td>{{r.receiver}}</td> <!--username will show up here due to how profile was defined-->
@@ -81,12 +84,14 @@
             <th>Request</th>
         </tr>
 
+        {# This empty </tr> seems accidental in the original code, but keeping structure. #}
         </tr>
         {% for profile in all_profiles %}
         <tr>
             <td>{{profile}}</td>
             <td>{{profile.first_name}}</td>
             <td>{{profile.last_name}}</td>
+            {# Checkbox to select users to send requests to. value={{profile.id}} sends the ID. #}
             <td><input type="checkbox" name="send_requests" value="{{profile.id}}"></td>
         </tr>
         {% endfor %}
@@ -111,11 +116,13 @@
         </tr>
 
         </tr>
+        {# Iterate through received requests. #}
         {% for rr in request_recieved_profiles %}
         <tr>
             <td>{{rr.sender}}</td>
             <td>{{rr.sender.first_name}}</td>
             <td>{{rr.sender.last_name}}</td>
+            {# Checkbox to accept requests. #}
             <td><input type="checkbox" name="recieve_requests" value="{{rr.id}}"></td>
         </tr>
         {% endfor %}

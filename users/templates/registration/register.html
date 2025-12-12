@@ -2,13 +2,14 @@
 
 {% block content %}
 
-  <form action="{% url 'users:register' %}" method="post" >
-    {% csrf_token %}
-    {{ form.as_p }}
+<form action="{% url 'users:register' %}" method="post">
+  {% csrf_token %}
+  {# Display the form as paragraphs using .as_p #}
+  {{ form.as_p }}
 
-    <button name="submit">Register</button>
-    <input type="hidden" name="next" 
-    value="{% url 'FeedApp:index' %}" />
-  </form>
+  <button name="submit">Register</button>
+  {# The 'next' hidden input redirects the user to the index page after registration. #}
+  <input type="hidden" name="next" value="{% url 'FeedApp:index' %}" />
+</form>
 
 {% endblock content %}

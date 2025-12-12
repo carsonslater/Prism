@@ -1,5 +1,6 @@
 {% extends "FeedApp/base.html" %}
 {% load bootstrap4 %}
+{# Load crispy_forms_tags to render forms nicely with Bootstrap styles. #}
 {% load crispy_forms_tags %}
 
 {% block content %}
@@ -9,7 +10,9 @@
 </h1>
 
 <form action="{% url 'FeedApp:profile' %}" method="post">
+    {# csrf_token must be included in every POST form. #}
     {% csrf_token %}
+    {# Render the form using the 'crispy' filter. #}
     {{ form|crispy }}
     <br><br>
     <button name="submit" class="btn btn-outline-primary">Update</button>

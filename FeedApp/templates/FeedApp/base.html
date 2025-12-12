@@ -1,4 +1,5 @@
 {% load bootstrap4 %}
+{# 'load' tag loads custom template tags from the bootstrap4 application. #}
 
 <!doctype html>
 
@@ -10,6 +11,7 @@
           shrink-to-fit=no">
     <title>Feed</title>
 
+    {# These tags insert the necessary CSS and JavaScript files for Bootstrap 4. #}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
 
@@ -18,6 +20,8 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
 
+        {# The 'url' tag generates a URL from the name of a view, defined in urls.py. #}
+        {# This avoids hardcoding URLs in templates. #}
         <a class="navbar-brand" href="{% url 'FeedApp:index'%}">
             Home</a>
 
@@ -43,13 +47,16 @@
             </ul>
 
             <ul class="navbar-nav ml-auto">
+                {# The 'if' tag evaluates variables. user.is_authenticated checks if the user is currently logged in. #}
                 {% if user.is_authenticated %}
 
                 <li class="nav-item">
+                    {# Template variables are surrounded by double curly braces. #}
                     <span class="navbar-text">Hello, {{ user.username }}.</span>
                 </li>
                 <li class="nav-item">
                     <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                        {# csrf_token is required for all POST forms for security against Cross-Site Request Forgery. #}
                         {% csrf_token %}
                         <button type="submit" class="nav-link"
                             style="background: none; border: none; cursor: pointer;">Log out</button>
@@ -63,6 +70,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
                 </li>
+                {# 'endif' closes the if block. #}
                 {% endif %}
             </ul>
         </div>
@@ -71,6 +79,7 @@
 
     <main role="main" class="container">
         <div class="pb-2 mb-2 border-bottom">
+            {# 'block' tags define sections that child templates can override. #}
             {% block page_header %}{% endblock page_header %}
         </div>
 

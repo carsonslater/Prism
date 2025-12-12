@@ -1,9 +1,12 @@
+{# 'extends' inherits the base template, meaning this file will look like base.html #}
+{# except for the blocks that are overridden here. #}
 {% extends "FeedApp/base.html" %}
 
+{# 'block page_header' overrides the block defined in base.html. #}
 {% block page_header %}
 <div class="jumbotron">
     <h1 class="display-3">Prism</h1>
-    <p class="lead">A Social Network where you can be you.
+    <p class="lead">A Social Network where everyone can be themselves.
     </p>
 
     <a class="btn btn-lg btn-outline-primary" href="{% url 'users:register' %}" role="button">Join Now &raquo;</a>

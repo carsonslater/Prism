@@ -8,12 +8,13 @@
     <p>New Post:</p>
 </h2>
 
-<!---You must remember to include the enctype property in the form tag for the
- upload file to be attached to the request properly-->
+{# IMPORTANT: Include enctype="multipart/form-data" whenever a form includes a FileField or ImageField. #}
+{# Without this, the file data will not be sent to the server. #}
 
 <form action="{% url 'FeedApp:new_post' %}" method="post" enctype="multipart/form-data">
 
     {% csrf_token %}
+    {# bootstrap_form renders the form fields with Bootstrap styling. #}
     {% bootstrap_form form %}
 
     <br><br>

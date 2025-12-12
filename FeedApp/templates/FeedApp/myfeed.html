@@ -11,6 +11,7 @@
 <a href="{% url 'FeedApp:new_post' %}">Add a new post</a>
 
 <table style="font-size: 25px; width: 100%;">
+    {# Iterate over posts and their counts. #}
     {% for p, c, l in zipped_list %}
     <tr style="border: 1px solid black; padding: 6px;">
         <td>
@@ -23,6 +24,7 @@
     <tr style="border: 1px solid black; padding: 6px;">
         <td>{{ p.date_posted }}</td>
         <td>Likes: &nbsp{{ l }} &nbsp&nbsp&nbsp</td>
+        {# Link to the comments page, passing the post ID as an argument. #}
         <td>Comments: &nbsp <a href="{% url 'FeedApp:comments' p.id %}">{{ c }}</a> &nbsp&nbsp&nbsp</td>
     </tr>
 
