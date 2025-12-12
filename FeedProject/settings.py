@@ -15,6 +15,7 @@ import os
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR helps us reference files within the project directory structure, regardless of where the project code is located on the computer.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,54 +23,63 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# The SECRET_KEY is used for cryptographic signing. It is crucial to keep this secure in production.
 SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-m3zn-=tf0!p!l%zi)h4)2r)1m6sm&@ns@^3)1at#6e)yjmb__r')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG mode provides detailed error pages. It must be False in production to prevent leaking sensitive information.
 DEBUG = 'RENDER' not in os.environ
 
+# ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django site can serve.
 ALLOWED_HOSTS = []
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 
+# If running on Render, add the external hostname to allowed hosts.
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
-
+# INSTALLED_APPS tells Django which applications are active for this project.
 INSTALLED_APPS = [
-    #MyApps
+    # MyApps - These are the custom apps created for this project.
     'FeedApp',
     'users',
-     #third party apps
+     # third party apps - Libraries installed via pip to extend functionality.
     'bootstrap4',
     'crispy_forms',
     'crispy_bootstrap4',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # Django apps - Core apps included with Django.
+    'django.contrib.admin',        # The admin site
+    'django.contrib.auth',         # An authentication system
+    'django.contrib.contenttypes', # A framework for content types
+    'django.contrib.sessions',     # A session framework
+    'django.contrib.messages',     # A messaging framework
+    'django.contrib.staticfiles',  # A framework for managing static files
 ]
 
+# MIDDLEWARE is a framework of hooks into Django's request/response processing. 
+# It's a light, low-level 'plugin' system for globally altering Django's input or output.
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Serves static files efficiently
+    'django.contrib.sessions.middleware.SessionMiddleware', # Manages sessions across requests
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware', # Protects against Cross Site Request Forgeries
+    'django.contrib.auth.middleware.AuthenticationMiddleware', # Associates users with requests
+    'django.contrib.messages.middleware.MessageMiddleware', # Enables temporary message storage
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', # Protects against clickjacking
 ]
 
 ROOT_URLCONF = 'FeedProject.urls'
 
+# TEMPLATES configuration defines how Django loads and renders templates (HTML files).
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # DIRS lists directories where the engine should look for template source files, in addition to the App directories.
         'DIRS': [],
-        'APP_DIRS': True,
+        'APP_DIRS': True, # Tells Django to look for templates in a "templates" subdirectory of each installed app.
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -86,7 +96,8 @@ WSGI_APPLICATION = 'FeedProject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+# DATABASES dictionary contains the settings for all databases to be used with Django.
+# Here we configure 'default' to use SQLite for development, or a database URL if provided (common in deployment).
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
@@ -97,6 +108,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+# These validators check the strength of passwords when users register or change passwords.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -131,9 +143,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+# Settings for managing static files (CSS, JavaScript, Images).
 
 STATIC_URL = '/static/'
+# STATIC_ROOT is the absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_STORAGE defines the file storage engine to use when collecting static files.
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -141,7 +156,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = 'users:login'
-LOGOUT_REDIRECT_URL = 'FeedApp:index'
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# Custom settings for login/logout behavior
+LOGIN_URL = 'users:login' # URL to redirect to when login is required
+LOGOUT_REDIRECT_URL = 'FeedApp:index' # URL to redirect to after logout
+CRISPY_TEMPLATE_PACK = 'bootstrap4' # Template pack for crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"

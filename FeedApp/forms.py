@@ -7,10 +7,13 @@ from .models import (
 
 
 # Form 1: for creating or editing a Post object
+# ModelForm creates a form automatically from a model class.
 class PostForm(forms.ModelForm):
+    # The Meta class is where we tell Django which model to use and which fields to include in the form.
     class Meta:
         model = Post
         fields = ["description", "image"]
+        # labels allow us to customize the text displayed next to the input field.
         labels = {"description": "What would you like to say?"}
 
 
@@ -32,6 +35,7 @@ class ProfileForm(forms.ModelForm):
 class RelationshipForm(forms.ModelForm):
     class Meta:
         model = Relationship
+        # fields = "__all__" includes all fields from the model in the form.
         fields = "__all__"
         labels = {
             "sender": "Accept friend request from:",

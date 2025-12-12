@@ -19,12 +19,19 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 
+# urlpatterns is a list where we define the mapping between URLs and the views that handle them.
 urlpatterns = [
+    # 'admin/' routes to the built-in Django administration site.
     path('admin/', admin.site.urls),
+    # include('FeedApp.urls') tells Django to look into FeedApp/urls.py for any URLs starting with root '' (empty string).
+    # This keeps our URL configuration modular.
     path('', include('FeedApp.urls')),
+    # include('users.urls') routes any URL not matched above to the users app IF it matches patterns in users/urls.py. 
+    # (Note: path() matching checks patterns in order).
     path('users/', include('users.urls')),
 ]
 
+# If we are in DEBUG mode (local development), we might want to serve static/media files differently.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
